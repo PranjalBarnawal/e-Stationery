@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.navigation_drawer);
 
 
-        dl =  findViewById(R.id.activity_main);
+        dl = findViewById(R.id.activity_main);
         t = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
 
         dl.addDrawerListener(t);
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        nv =  findViewById(R.id.nv);
+        nv = findViewById(R.id.nv);
 
 
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -76,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,20 +94,13 @@ public class MainActivity extends AppCompatActivity {
         gridView.setNestedScrollingEnabled(true);
 
 
-
-
-
         CustomAdapter customAdapter = new CustomAdapter();
         gridView.setAdapter(customAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i==0)
-                {
-                    Intent intent=new Intent(MainActivity.this,AutoComplete.class);
-                    startActivity(intent);
-                }
-            Toast.makeText(getApplicationContext(),fruitNames[i],Toast.LENGTH_LONG).show();
+
+                Toast.makeText(getApplicationContext(), fruitNames[i], Toast.LENGTH_LONG).show();
 
             }
         });
@@ -138,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            View view1 = getLayoutInflater().inflate(R.layout.item,null);
+            View view1 = getLayoutInflater().inflate(R.layout.item, null);
             //getting view in row_data
             TextView name = view1.findViewById(R.id.fruits);
             ImageView image = view1.findViewById(R.id.images);
@@ -147,23 +136,37 @@ public class MainActivity extends AppCompatActivity {
             return view1;
 
 
-
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
         if (t.onOptionsItemSelected(item))
             return true;
 
+
+        if (id == R.id.mybutton) {
+
+            Intent intent = new Intent(MainActivity.this, AutoComplete.class);
+            startActivity(intent);
+
+        }
+
         return super.onOptionsItemSelected(item);
+
+
     }
-
-
-
-
 }
+
+
 
 
 
