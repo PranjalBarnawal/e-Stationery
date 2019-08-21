@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent sellIntent = new Intent(MainActivity.this, SellActivity.class);
+                startActivity(sellIntent);
+
             }
         });
 
