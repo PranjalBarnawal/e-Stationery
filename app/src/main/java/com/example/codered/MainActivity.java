@@ -24,6 +24,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+
 public class MainActivity extends AppCompatActivity {
     GridView gridView;
 
@@ -66,6 +71,24 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.mycart:
                         Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
                         break;
+                    case R.id.signOut:
+
+                        AuthUI.getInstance()
+                                .signOut(MainActivity.this)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        signOut();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, ""+ e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                        Toast.makeText(MainActivity.this, "Sign Out", Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         return true;
                 }
@@ -75,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
@@ -110,7 +134,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    private void signOut() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
 
     private class CustomAdapter extends BaseAdapter {
         @Override

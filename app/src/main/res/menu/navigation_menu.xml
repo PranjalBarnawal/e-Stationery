@@ -10,5 +10,8 @@
     <item android:id="@+id/mycart"
         android:icon="@drawable/ic_launcher_background"
         android:title="My Cart"/>
+    <item android:id="@+id/signOut"
+        android:icon="@drawable/books"
+        android:title="Sign Out"/>
 
 </menu>
