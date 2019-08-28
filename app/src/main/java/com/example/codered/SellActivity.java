@@ -1,5 +1,6 @@
 package com.example.codered;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 public class SellActivity extends AppCompatActivity {
 
     GridView gridView2;
+
     String[] fruitNames = {"Apple", "Orange", "strawberry", "Melon", "Kiwi", "Banana"};
     int[] fruitImages = {R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool};
 
@@ -28,8 +30,9 @@ public class SellActivity extends AppCompatActivity {
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Toast.makeText(getApplicationContext(), fruitNames[i], Toast.LENGTH_LONG).show();
+                Intent postIntent= new Intent(SellActivity.this,PostActivity.class);
+                postIntent.putExtra("category",fruitNames[i]);
+                startActivity(postIntent);
 
             }
         });
