@@ -41,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:text="Post Ad"
+        android:onClick="post"
         android:textSize="40sp"
         android:id="@+id/postButton"
         android:layout_alignParentBottom="true"

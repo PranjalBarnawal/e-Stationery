@@ -19,68 +19,66 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class PostActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
-    TextView categoryShow;
-    String pId;
-    EditText title;
+public class Register extends AppCompatActivity {
+
+    EditText userName;
+    EditText email;
     String uId;
-    EditText price;
-    EditText description;
-    Button postButton;
+    EditText phoneNo;
+    Button SubmitButton;
     private DatabaseReference mDatabase;
-    private String category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
+        setContentView(R.layout.activity_register);
 
-        categoryShow=findViewById(R.id.categoryShow);
-        title=findViewById(R.id.title);
-        price=findViewById(R.id.price);
-        description=findViewById(R.id.description);
-        postButton=findViewById(R.id.postButton);
+        //categoryShow=findViewById(R.id.categoryShow);
+        userName= findViewById(R.id.username);
+        email= findViewById(R.id.email);
+        SubmitButton=findViewById(R.id.submitButton);
+        phoneNo= findViewById(R.id.phone);
 
-        Intent postIntent=getIntent();
-        category= postIntent.getStringExtra("category");
-        categoryShow.setText(category);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Posts");
-        pId = mDatabase.push().getKey();
+        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         uId=currentFirebaseUser.getUid();
 
 
 
     }
-    private void addPostChangeListener() {
+    private void addUserChangeListener() {
         // User data change listener
-        mDatabase.child(pId).addValueEventListener(new ValueEventListener() {
+        mDatabase.child(uId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Posts post = dataSnapshot.getValue(Posts.class);
+                userClass user = dataSnapshot.getValue(userClass.class);
 
                 // Check for null
-                if (post == null) {
+                if (user == null) {
                     Log.e("LOL", "User data is null!");
                     return;
                 }
 
-                Log.e("LOL", "User data is changed!" + post.category + ", " + post.title);
+                Log.e("LOL", "User is registered" );
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.e("LOL", "Failed to read user", error.toException());
+                Log.e("LOL", "registration error", error.toException());
             }
         });
     }
 
-    public void post(View view) {
-        Posts post = new Posts(category, pId,uId,title.getText().toString(),Integer.parseInt(price.getText().toString()),description.getText().toString());
-        mDatabase.child(category).child(pId).setValue(post);
-        addPostChangeListener();
+
+    public void register(View view) {
+        userClass user = new userClass(userName.getText().toString(),email.getText().toString(), uId, phoneNo.getText().toString());
+        mDatabase.child(uId).setValue(user);
+        addUserChangeListener();
+        Intent intent=new Intent(Register.this,MainActivity.class);
+        startActivity(intent);
     }
 }
