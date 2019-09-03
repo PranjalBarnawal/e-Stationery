@@ -127,7 +127,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(getApplicationContext(), fruitNames[i], Toast.LENGTH_LONG).show();
+                Intent adIntent= new Intent(MainActivity.this,BuyActivity.class);
+                adIntent.putExtra("catName",fruitNames[i]);
+                startActivity(adIntent);
+                //Toast.makeText(getApplicationContext(), fruitNames[i], Toast.LENGTH_LONG).show();
 
             }
         });
