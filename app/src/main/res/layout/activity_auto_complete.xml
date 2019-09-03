@@ -7,10 +7,10 @@
     tools:context=".AutoComplete"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize">
-        <android.support.v7.widget.AppCompatAutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
             android:id="@+id/autoView"
             android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
             />
 
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
 </LinearLayout>
