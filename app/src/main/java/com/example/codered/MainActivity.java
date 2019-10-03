@@ -11,6 +11,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,15 +28,22 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
     GridView gridView;
 
-
+    TextView profileName;
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
-
+    View header;
     String[] fruitNames = {"Apple", "Orange", "strawberry", "Melon", "Kiwi", "Banana"};
     int[] fruitImages = {R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool, R.drawable.deadpool};
 
@@ -51,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
         t.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setUserName();
 
         nv = findViewById(R.id.nv);
+        header=nv.getHeaderView(0);
 
+        profileName=(TextView) header.findViewById(R.id.profileName);
 
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(MainActivity.this, ""+ e.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -96,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
@@ -135,7 +146,31 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    private void signOut() {
+    public void setUserName() {
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uId = currentUser.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uId);
+
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userClass user = dataSnapshot.getValue(userClass.class);
+
+                profileName.setText(user.userName);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("error", "cant set username");
+            }
+        });
+    }
+
+
+        private void signOut() {
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }

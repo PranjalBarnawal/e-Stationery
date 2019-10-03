@@ -14,18 +14,20 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 public class BuyActivity extends AppCompatActivity {
     private DatabaseReference PostsRef;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-
+    private String pId;
+    String catName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy);
         Intent categoryIntent=getIntent();
-        String catName=categoryIntent.getStringExtra("catName");
+        catName=categoryIntent.getStringExtra("catName");
 
         PostsRef= FirebaseDatabase.getInstance().getReference().child("Posts").child(catName);
 
@@ -48,7 +50,8 @@ public class BuyActivity extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull ViewHolderClass holder, int position, @NonNull Posts model) {
                         holder.txtName.setText(model.title);
                         holder.txtPrice.setText("₹" + model.price);
-                        //Picasso.get().load(model.getImage()).into(holder.imageView);
+                        Picasso.get().load(model.image).into(holder.imageView);
+                        pId=model.pId;
                     }
 
                     @NonNull
@@ -61,5 +64,13 @@ public class BuyActivity extends AppCompatActivity {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+    }
+
+    public void startProductActivity(View view) {
+        Intent intent=new Intent(BuyActivity.this,ProductActivity.class);
+        intent.putExtra("category",catName);
+        intent.putExtra("pId",pId);
+        startActivity(intent);
+
     }
 }

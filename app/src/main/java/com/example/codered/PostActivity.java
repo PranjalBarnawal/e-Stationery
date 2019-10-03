@@ -2,6 +2,7 @@ package com.example.codered;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -32,6 +33,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -120,10 +123,24 @@ public class PostActivity extends AppCompatActivity {
             Uri selectedImage = data.getData();
 
 
+        // compressing image
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            //here you can choose quality factor in third parameter(ex. i choosen 25)
+            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            byte[] fileInBytes = baos.toByteArray();
+
+
             final StorageReference ref = mountainsRef.child("images/"+pId+"/rivers.jpg");
 
 
-            UploadTask uploadTask = ref.putFile(selectedImage);
+            UploadTask uploadTask = ref.putBytes(fileInBytes);
 
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
@@ -155,7 +172,6 @@ public class PostActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-
 
             uploadImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         }
